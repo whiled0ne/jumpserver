@@ -44,8 +44,17 @@ def gen_keys(key="", key_path_dir=""):
     public_key = os.path.join(key_path_dir, 'id_rsa.pub')
     mkdir(key_path_dir, mode=755)
     if not key:
-        key = RSAKey.generate(2048)
-        key.write_private_key_file(private_key)
+        if os.path.exists(private_key):
+            os.remove(private_key)
+        if os.path.exists(public_key):
+            os.remove(public_key)
+        cmd="ssh-keygen  -t rsa -N '' -f %s -q -b 2048"%private_key
+        os.system(cmd)
+        if not os.path.exists(public_key):
+            key = RSAKey.generate(2048)
+            key.write_private_key_file(private_key)
+        else:
+            return key_path_dir
     else:
         key_file = os.path.join(key_path_dir, 'id_rsa')
         with open(key_file, 'w') as f:
