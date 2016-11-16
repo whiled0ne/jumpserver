@@ -88,10 +88,10 @@ def db_update_user(**kwargs):
     user_id = kwargs.pop('user_id')
     user = User.objects.filter(id=user_id)
     if user:
-        user_get = user[0]
         password = kwargs.pop('password')
         user.update(**kwargs)
         if password.strip():
+            user_get = user[0]
             user_get.set_password(password)
             user_get.save()
     else:
